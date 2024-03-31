@@ -3,14 +3,11 @@
 ## Project Goals and Background:
 This project pertains to Adaptive Bit Rate (ABR) algorithms for Internet video delivery. The project will involve reading papers published in top scientific conferences on computer networking, and implementing and evaluating ABR algorithms proposed in them on a custom ABR simulator that we have built. You will also critique these algorithms, identify when they work well and when they do not, explore alternative designs, and turn in your results and findings in a research report that you will submit.
 
-
-When delivering Internet video, content is split into chunks (each chunk corresponding to a few seconds of video play time). Each chunk is encoded at different video qualities. An ABR algorithm (typically implemented in the client) must decide what quality to fetch each chunk at while simultaneously optimizing several objectives (i) avoiding rebuffering events at the client; (ii) maximizing the average quality fetched across all chunks; and (iii) minimizing variation in quality across chunks. It is common to capture performance using a composite metric that combines all of these metrics. The Composite Metric comprises a reward for fetching higher quality chunks, and penalties for rebuffering and quality variation, with the weights for rebuffering and quality change metrics set by each video publisher based on its preferences (see “Overview on Video Streaming and User Experience” or the MPCSigcomm15 paper below for more details). In making its decisions, some ABR algorithms require a prediction of future bandwidth, with methods for predicting bandwidth itself ranging from simple ones (e.g., take the mean of the throughput of the last few chunks) to more sophisticated techniques actively being researched.
-
+When delivering Internet video, content is split into chunks (each chunk corresponding to a few seconds of video play time). Each chunk is encoded at different video qualities. An ABR algorithm (typically implemented in the client) must decide what quality to fetch each chunk at while simultaneously optimizing several objectives (i) avoiding rebuffering events at the client; (ii) maximizing the average quality fetched across all chunks; and (iii) minimizing variation in quality across chunks. It is common to capture performance using a composite metric that combines all of these metrics. The Composite Metric comprises a reward for fetching higher quality chunks, and penalties for rebuffering and quality variation, with the weights for rebuffering and quality change metrics set by each video publisher based on its preferences (see the MPCSigcomm15 paper below for more details). In making its decisions, some ABR algorithms require a prediction of future bandwidth, with methods for predicting bandwidth itself ranging from simple ones (e.g., take the mean of the throughput of the last few chunks) to more sophisticated techniques actively being researched.
 
 There are two mandatory readings associated with the project:
-
-[MPCSigcomm15] “A Control-Theoretic Approach for Dynamic Adaptive Video Streaming over HTTP”, Yin et al., ACM Sigcomm 2015
-[BufferSigcomm14] “A buffer-based approach to rate adaptation: evidence from a large video streaming service”, Huang et al., ACM Sigcomm 2014.
+* [MPCSigcomm15] “A Control-Theoretic Approach for Dynamic Adaptive Video Streaming over HTTP”, Yin et al., ACM Sigcomm 2015
+* [BufferSigcomm14] “A buffer-based approach to rate adaptation: evidence from a large video streaming service”, Huang et al., ACM Sigcomm 2014.
 
 ## Specific requirements for this project:
 In this project, we require you to:
@@ -184,20 +181,15 @@ python simulator.py <path to the test file (.ini)> <Student algorithm to run> -v
 
 The path to the test file should be the path to one of the .ini files in the tests/ directory. The student algorithm to run should be an integer 1 or 2 (or higher if you made more algorithms) to run student1.py or student2.py. ‘-v’ is an optional flag that enables verbose output for the simulation. This prints the download times and quality selections for each chunk.
 
-For example, running:
+For example, running the below will start the simulator running the test hi_avg_hi_var.ini using the algorithm in student2.py and enable verbose logging.
 ```
 python simulator.py tests/hi_avg_hi_var.ini 2 -v
 ```
 
-will start the simulator running the test hi_avg_hi_var.ini using the algorithm in student2.py and enable verbose logging.
-
-
-The tester will run your algorithm and output statistics for all test cases. It is called with
-
+The tester will run your algorithm and output statistics for all test cases. It is called with:
 ```
 python tester.py <Student algorithm to run>
 ```
-
 
 ## References and Useful Information
 The configuration file is to be extracted and read using the configparser library. See the link below for more information. Using pip, can be installed with the command `pip3 install --user configparser`. This command is provided in the starter code makefile and can be run with `make configparser`.
