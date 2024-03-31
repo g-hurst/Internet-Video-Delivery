@@ -18,13 +18,10 @@ There are two mandatory readings associated with the project:
 In this project, we require you to:
 
 
-Implement, evaluate, and compare the (i) RobustMPC algorithm in Sec 4.3 of the MPCSigcomm15 paper, (ii) the BBA-2 algorithm in the BufferSigcomm14 paper, and (iii) a new approach of your choosing/that you devise. RobustMPC and BBA-2 have been chosen as the base algorithms not necessarily because they are the best algorithms, but because they have been published in reputable scientific forums, are well cited, represent interesting design decisions, and we believe the algorithms here are feasible to implement within the constraints of a course project, while not being too trivial to implement.
-
-For the new approach of your choosing, our emphasis is on the approach being interesting/ thought-provoking with the potential of out-performing RobustMPC and the BBA-2 algorithms – if it ultimately did not result in performance that met your expectations, but you can document it well, and explain why performance fell short, that would still be considered a worthwhile effort.
-
-The new approach could be a variant of MPC, or BBA, but this should be sufficiently substantial and interesting. Further, Basic MPC (Sec 4.2 of the paper), RobustMPC (Sec 4.3 of the paper), or FastMPC would not qualify as variants since those variants are already presented in the paper. Likewise, none of the BBA variants in the paper would qualify.
-
-Turn in a report which provides an analysis of these algorithms and the variants. The report should document the performance of the two algorithms (and their variants) and a comparison on a set of benchmark configurations/bandwidth traces that we provide.
+1. Implement, evaluate, and compare the (i) RobustMPC algorithm in Sec 4.3 of the MPCSigcomm15 paper, (ii) the BBA-2 algorithm in the BufferSigcomm14 paper, and (iii) a new approach of your choosing/that you devise. RobustMPC and BBA-2 have been chosen as the base algorithms not necessarily because they are the best algorithms, but because they have been published in reputable scientific forums, are well cited, represent interesting design decisions, and we believe the algorithms here are feasible to implement within the constraints of a course project, while not being too trivial to implement.
+2. For the new approach of your choosing, our emphasis is on the approach being interesting/ thought-provoking with the potential of out-performing RobustMPC and the BBA-2 algorithms – if it ultimately did not result in performance that met your expectations, but you can document it well, and explain why performance fell short, that would still be considered a worthwhile effort.
+3. The new approach could be a variant of MPC, or BBA, but this should be sufficiently substantial and interesting. Further, Basic MPC (Sec 4.2 of the paper), RobustMPC (Sec 4.3 of the paper), or FastMPC would not qualify as variants since those variants are already presented in the paper. Likewise, none of the BBA variants in the paper would qualify.
+4. Turn in a report which provides an analysis of these algorithms and the variants. The report should document the performance of the two algorithms (and their variants) and a comparison on a set of benchmark configurations/bandwidth traces that we provide.
 
 
 ## Hints on implementing the MPCSigcomm15 algorithm:
@@ -35,18 +32,11 @@ The algorithm published in the MPCSigcomm15 paper may feel intimidating at first
 
 Consider that chunks 1,2,..i have been downloaded. The algorithm must determine what quality to download for chunk i+1. We suggest the following for the implementation:
 
-Consider a look-ahead window of W chunks.
-
-Evaluate all possible choices of chunk qualities for the next W chunks, and compute a score for each possible choice. Concretely, assume W=5, and there are 3 different chunk qualities. Then, there are 35=243 different possible sequences to evaluate. Find the sequence with the best score, and accordingly choose the quality for chunk i+1
-
-Computing the score for each sequence itself involves simulating the effects of each sequence (e.g., determining if that sequence would trigger a rebuffering event).
-
+1. Consider a look-ahead window of W chunks.
+2. Evaluate all possible choices of chunk qualities for the next W chunks, and compute a score for each possible choice. Concretely, assume W=5, and there are 3 different chunk qualities. Then, there are 35=243 different possible sequences to evaluate. Find the sequence with the best score, and accordingly choose the quality for chunk i+1
+3. Computing the score for each sequence itself involves simulating the effects of each sequence (e.g., determining if that sequence would trigger a rebuffering event).
 
 Step 2 is not clearly described in the paper. While we recommend a brute force enumeration here for ease of implementation, the paper talks about solving an optimization problem, but does not detail it sufficiently. For those interested, a more efficient implementation is feasible using a dynamic program, but that is not required for the course project. That said, implementing a dynamic program could be part of an MPC variant that you design (with the benefit being computation efficiency).
-
-
-
-
 
 ## Overview on Video Streaming and User Experience
 
@@ -67,18 +57,14 @@ For the purposes of this project, each chunk has a “chunk size ratio” which 
 Two factors very important to users are the quality of the video and the rebuffer rate. Ideally, your algorithm will pick the highest quality chunks it can while also avoiding rebuffering as much as possible.
 
 Additionally, users are worried about the overall variation in quality. Imagine watching a video that changes quality every three seconds-- annoying! Therefore, there are three variables to optimize when building your algorithm:
-
-Maximize overall chunk quality. Give the user the highest quality video possible.
-
-Minimize rebuffer time. Don’t have the user waiting while the next chunk is fetched (alternatively, “keep the client buffer > 0 seconds at all times”)
-
-Minimize quality variation. Give the user a consistent viewing experience.
-
+1. Maximize overall chunk quality. Give the user the highest quality video possible.
+2. Minimize rebuffer time. Don’t have the user waiting while the next chunk is fetched (alternatively, “keep the client buffer > 0 seconds at all times”)
+3. Minimize quality variation. Give the user a consistent viewing experience.
 
 The relative importance of these three metrics is controlled by three coefficients: The quality coefficient, variation coefficient, and rebuffer coefficient. If a user is very interested in one aspect, the corresponding coefficient will be higher: e.g. a user interested in quality will have a high-quality coefficient.
 
 Overall user Quality of Experience (QoE) for viewing one video is calculated as follows:
-
+$$QoE=[(Qual Coef )(Total Chunk Qual )−(Var Coef )(Total Quality Var )−(Rebuff Coef )(Rebuff Time )]¿(Video Length) $$
 
 Additionally, many papers consider join latency, or the time between a user starting the video and the first chunk arriving. In our simulator, we consider join latency as rebuffering time.
 
