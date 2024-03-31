@@ -119,6 +119,7 @@ For this project, we have created an ABR simulator that replicates a client stre
 
 The overall control flow is shown below.
 
+![alt text](https://github.com/g-hurst/Internet-Video-Delivery/blob/master/directions/control_flow.png?raw=true) </br>
 
 The client message sent will contain everything you need to implement this lab’s algorithms. It contains both dynamic variables that reflect the current stream state (seconds elapsed, previous chunk throughput, bitrates for upcoming chunks…) and static variables that are needed to calculate the algorithm’s choices (Quality of Experience coefficients, number of seconds per chunk). These variables are well documented in the student code ClientMessage class.
 
