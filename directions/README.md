@@ -64,7 +64,7 @@ Additionally, users are worried about the overall variation in quality. Imagine 
 The relative importance of these three metrics is controlled by three coefficients: The quality coefficient, variation coefficient, and rebuffer coefficient. If a user is very interested in one aspect, the corresponding coefficient will be higher: e.g. a user interested in quality will have a high-quality coefficient.
 
 Overall user Quality of Experience (QoE) for viewing one video is calculated as follows:
-$$ QoE= \frac{[(Qual Coef )(Total Chunk Qual )−(Var Coef )(Total Quality Var )−(Rebuff Coef )(Rebuff Time )]}{(Video Length)} $$
+$$QoE= \frac{[(Qual Coef )(Total Chunk Qual )−(Var Coef )(Total Quality Var )−(Rebuff Coef )(Rebuff Time )]}{(Video Length)}$$
 
 Additionally, many papers consider join latency, or the time between a user starting the video and the first chunk arriving. In our simulator, we consider join latency as rebuffering time.
 
