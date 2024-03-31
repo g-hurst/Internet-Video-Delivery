@@ -123,34 +123,24 @@ The overall control flow is shown below.
 
 The client message sent will contain everything you need to implement this lab’s algorithms. It contains both dynamic variables that reflect the current stream state (seconds elapsed, previous chunk throughput, bitrates for upcoming chunks…) and static variables that are needed to calculate the algorithm’s choices (Quality of Experience coefficients, number of seconds per chunk). These variables are well documented in the student code ClientMessage class.
 
-ALL necessary information is provided in the ClientMessage. Your code SHOULD NOT attempt to read the test case files for the purpose of making quality choices.
-
-
-
+**ALL** necessary information is provided in the ClientMessage. Your code **SHOULD NOT** attempt to read the test case files for the purpose of making quality choices.
 
 ### Simulator Code Structure
 The code structure is as follows,
-
-
-simulator.py: This is the top-level simulator file. It parses the test case and simulates the viewing session using the choices from your ABR algorithm. DO NOT MODIFY.
-
-tester.py: This script will run simulator.py for all test cases in the tests/ directory. DO NOT MODIFY.
-
-Classes/: This contains supporting code for the simulator. DO NOT MODIFY.
-
-student/student1.py: This is where you are to implement your first ABR algorithm. It contains a predefined class “ClientMessage” containing all the various metrics that might be used by your algorithm. Fill out the student_entrypoint() section of this file.
-
-student/student2.py: This is where you are to implement your second ABR algorithm.
-
-student/studentX.py: If you would like to implement more algorithms, you may copy over student1.py or student2.py to make a student3, student4, .... and run them the same way.
+* `simulator.py`: This is the top-level simulator file. It parses the test case and simulates the viewing session using the choices from your ABR algorithm. DO NOT MODIFY.
+* `tester.py`: This script will run simulator.py for all test cases in the tests/ directory. DO NOT MODIFY.
+* `Classes/`: This contains supporting code for the simulator. DO NOT MODIFY.
+* `student/student1.py`: This is where you are to implement your first ABR algorithm. It contains a predefined class “ClientMessage” containing all the various metrics that might be used by your algorithm. Fill out the student_entrypoint() section of this file.
+* `student/student2.py`: This is where you are to implement your second ABR algorithm.
+* `student/studentX.py`: If you would like to implement more algorithms, you may copy over student1.py or student2.py to make a student3, student4, .... and run them the same way.
 
 ### Helper Functions and Global Variables
-Because the student code is called from one function (student_entrypoint()), you are encouraged to implement any necessary classes, helper functions, and global variables in the studentX.py classes.
+Because the student code is called from one function (`student_entrypoint()`), you are encouraged to implement any necessary classes, helper functions, and global variables in the studentX.py classes.
 
 Some algorithms, such as RobustMPC, require knowledge of previous chunks in order to make predictions on future chunks. To capture this behavior, you should save any necessary information in global or module-level variables between student_entrypoint() calls. If you do not know how to do this, search online for a tutorial on the Python “global” keyword.
 
 #### Submitting your Code
-Submit each algorithmic variant as “student1.py”, “student2.py” and so on. For example, implement BBA 2 in “student1.py”, the Robust MPC algorithm in “student2.py”, and your new approach in “student3.py”. You may submit additional variants if you prefer. Please add a comment to each file indicating which algorithm and variant it corresponds to
+Submit each algorithmic variant as `student1.py`, `student2.py` and so on. For example, implement BBA 2 in `student1.py`, the Robust MPC algorithm in `student2.py`, and your new approach in `student3.py`. You may submit additional variants if you prefer. Please add a comment to each file indicating which algorithm and variant it corresponds to. 
 
 ### unning your Code
 The simulator runs your algorithm and outputs statistics on a per-chunk basis as well as for the complete video as a whole. You can run the simulator with the following command:
@@ -175,3 +165,6 @@ python tester.py <Student algorithm to run>
 The configuration file is to be extracted and read using the configparser library. See the link below for more information. Using pip, can be installed with the command `pip3 install --user configparser`. This command is provided in the starter code makefile and can be run with `make configparser`.
 
 https://docs.python.org/3/library/configparser.html
+
+## Grading:
+The project has open-ended components. Getting a decent grade will require implementing (i) both the RobustMPC and BBA-2 algorithms; (ii) an interesting approach of your own; and (iii) reporting results  clearly and in a well thought out manner, presenting good quality graphs, and clearly interpreting results, However, the very best grades will be obtained by students that explore particularly new and interesting approaches, and show creativity, effort and initiative in the design and implementation of the open-ended components. 
