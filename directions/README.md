@@ -64,7 +64,7 @@ Additionally, users are worried about the overall variation in quality. Imagine 
 The relative importance of these three metrics is controlled by three coefficients: The quality coefficient, variation coefficient, and rebuffer coefficient. If a user is very interested in one aspect, the corresponding coefficient will be higher: e.g. a user interested in quality will have a high-quality coefficient.
 
 Overall user Quality of Experience (QoE) for viewing one video is calculated as follows:
-$$QoE= \frac{[(Qual Coef )(Total Chunk Qual )−(Var Coef )(Total Quality Var )−(Rebuff Coef )(Rebuff Time )]}{(Video Length)}$$
+$$QoE= \frac{(Qual Coef)(Total Chunk Qual)−(Var Coef)(Total Quality Var)−(Rebuff Coef)(Rebuff Time)}{(Video Length)}$$
 
 Additionally, many papers consider join latency, or the time between a user starting the video and the first chunk arriving. In our simulator, we consider join latency as rebuffering time.
 
@@ -92,26 +92,23 @@ This defines the VBR behavior of the video being streamed by the client. It is f
 
 The size for streaming a particular chunk at a particular quality level is given by:
 
-$$ Total ¿ base chunk ¿ × chunk ¿ ×2quality^{level −1} $$
+$$ Total size = base chunk size × chunk size × 2 quality^{level −1} $$
 
 There are three things that define the size in bytes:
 
-Base chunk size, which is statically defined in the video parameters section
-
-Chunk size ratio, which comes from the chunk parameters lists. This represents how difficult it is for VBR to encode the chunk (e.g. a chunk with a ratio 2 takes about twice the bits to encode as a chunk with ratio 1, all others held constant).
-
-Quality level, which is chosen by your algorithm.
-
+1. Base chunk size, which is statically defined in the video parameters section
+2. Chunk size ratio, which comes from the chunk parameters lists. This represents how difficult it is for VBR to encode the chunk (e.g. a chunk with a ratio 2 takes about twice the bits to encode as a chunk with ratio 1, all others held constant).
+3. Quality level, which is chosen by your algorithm.
 
 Note that chunks vary in number of bytes, but each chunk has the same number of seconds of video. As an example, let’s say you'd like to stream the first chunk choosing from quality levels 1, 2, 3. The base chunk size is 1Mb and let's say the first value in the chunk size ratio list is 1.
-
-
-
+* Size corresponding to quality level 1∶ $1 ×1 ×2^{1-1}=1 MB$
+* Size corresponding to quality level 1∶ $1 ×1 ×2^{2-1}=2 MB$
+* Size corresponding to quality level 1∶ $1 ×1 ×2^{3-1}=4 MB$
 
 For any given chunk, streaming at a higher quality takes more bits. However, things are more nuanced when comparing across chunks, since the chunk size ratio varies as well. Let's say the quality level chosen for chunk 1 is 1, the quality level chosen for chunk 2 is 2, and the quality level chosen for chunk 3 is 3. However, the chunk_size_ratios for the first 3 chunks are 1, 2, .5. Then,
-
-
-
+* Size of first chunk∶ $1 ×1 ×2^{1-1}=1 MB$
+* Size of second chunk∶ $1 ×2 ×2^{2-1}=4 MB$
+* Size of third chunk∶ $1 ×0.5 ×2^{3-1}=2 MB$
 
 Because variable-bitrate encoding allowed the third chunk to be encoded more cheaply, we could stream at a higher quality and use fewer bits than the second chunk. Algorithms (MPC, BBR 2) can take advantage of this by increasing the quality of “cheap” chunks such as the third while decreasing the quality of “expensive” chunks such as the second.
 
