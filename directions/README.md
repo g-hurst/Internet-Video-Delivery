@@ -17,7 +17,6 @@ There are two mandatory readings associated with the project:
 ## Specific requirements for this project:
 In this project, we require you to:
 
-
 1. Implement, evaluate, and compare the (i) RobustMPC algorithm in Sec 4.3 of the MPCSigcomm15 paper, (ii) the BBA-2 algorithm in the BufferSigcomm14 paper, and (iii) a new approach of your choosing/that you devise. RobustMPC and BBA-2 have been chosen as the base algorithms not necessarily because they are the best algorithms, but because they have been published in reputable scientific forums, are well cited, represent interesting design decisions, and we believe the algorithms here are feasible to implement within the constraints of a course project, while not being too trivial to implement.
 2. For the new approach of your choosing, our emphasis is on the approach being interesting/ thought-provoking with the potential of out-performing RobustMPC and the BBA-2 algorithms – if it ultimately did not result in performance that met your expectations, but you can document it well, and explain why performance fell short, that would still be considered a worthwhile effort.
 3. The new approach could be a variant of MPC, or BBA, but this should be sufficiently substantial and interesting. Further, Basic MPC (Sec 4.2 of the paper), RobustMPC (Sec 4.3 of the paper), or FastMPC would not qualify as variants since those variants are already presented in the paper. Likewise, none of the BBA variants in the paper would qualify.
