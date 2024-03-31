@@ -64,44 +64,35 @@ Additionally, users are worried about the overall variation in quality. Imagine 
 The relative importance of these three metrics is controlled by three coefficients: The quality coefficient, variation coefficient, and rebuffer coefficient. If a user is very interested in one aspect, the corresponding coefficient will be higher: e.g. a user interested in quality will have a high-quality coefficient.
 
 Overall user Quality of Experience (QoE) for viewing one video is calculated as follows:
-$$QoE=[(Qual Coef )(Total Chunk Qual )−(Var Coef )(Total Quality Var )−(Rebuff Coef )(Rebuff Time )]¿(Video Length) $$
+$$ QoE= \frac{[(Qual Coef )(Total Chunk Qual )−(Var Coef )(Total Quality Var )−(Rebuff Coef )(Rebuff Time )]}{(Video Length)} $$
 
 Additionally, many papers consider join latency, or the time between a user starting the video and the first chunk arriving. In our simulator, we consider join latency as rebuffering time.
 
 ## ABR Simulator Test Cases
-The ABR simulator test cases are found in the tests/ directory of the starter code. Each defines parameters that control the video, user quality calculation, and client download throughput for the current viewing session. A description of each parameter is below. More details can be found by reading the comments in each test file.
+The ABR simulator test cases are found in the tests/ directory of the starter code. Each defines parameters that control the video, user quality calculation, and client download throughput for the current viewing session. A description of each parameter is below. **More details can be found by reading the comments in each test file.**
 
 ### Video Parameters
 This defines the parameters for the specific video file being streamed. There are three parameters in this section.
-
-
-chunk_length: The number of seconds of video per chunk.
-
-base_chunk_size: The size of an average chunk (MB) at the lowest quality. Chunk size may still vary due to VBR encoding.
-
-client_buffer_size: The max seconds of video stored by receiver/client
+* chunk_length: The number of seconds of video per chunk.
+* base_chunk_size: The size of an average chunk (MB) at the lowest quality. Chunk size may still vary due to VBR encoding.
+* client_buffer_size: The max seconds of video stored by receiver/client
 
 ### Quality Parameters
 This defines the parameters for calculating the user quality of experience. There are four parameters in this section.
-
-
-quality_levels: The number of quality levels available for streaming. In our simulator, streaming at a higher quality takes exponentially more bits; quality level 2 is twice as expensive as 1 and quality level 3 is four times as expensive as quality level 1.
-
-quality_coefficient: Used for calculating User Quality of Experience.
-
-variation_coefficient: Used for calculating User Quality of Experience.
-
-rebuffering_coefficient: Used for calculating User Quality of Experience.
+* quality_levels: The number of quality levels available for streaming. In our simulator, streaming at a higher quality takes exponentially more bits; quality level 2 is twice as expensive as 1 and quality level 3 is four times as expensive as quality level 1.
+* quality_coefficient: Used for calculating User Quality of Experience.
+* variation_coefficient: Used for calculating User Quality of Experience.
+* rebuffering_coefficient: Used for calculating User Quality of Experience.
 
 ### Throughput Parameters
-This defines the client throughput and chunk download rate for the given viewing session. Because client bandwidth changes, it is formatted as a list of bandwidths that the client application sees over time. It is recommended that you write a separate script to parse this list and build a graph of the client throughput over time. This will greatly improve your understanding of what is going on for each algorithm running each test case.
+This defines the client throughput and chunk download rate for the given viewing session. Because client bandwidth changes, it is formatted as a list of bandwidths that the client application sees over time. **It is recommended that you write a separate script to parse this list and build a graph of the client throughput over time. This will greatly improve your understanding of what is going on for each algorithm running each test case.**
 
 ### Chunk Parameters
 This defines the VBR behavior of the video being streamed by the client. It is formatted as a list of chunk size ratios, one for each chunk. Again, it would be greatly beneficial to your understanding to write a script that parses and graphs this list.
 
 The size for streaming a particular chunk at a particular quality level is given by:
 
-
+$$ Total ¿ base chunk ¿ × chunk ¿ ×2quality^{level −1} $$
 
 There are three things that define the size in bytes:
 
