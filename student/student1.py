@@ -84,19 +84,19 @@ class BBA_2():
         msg += '\n  '.join([f'{k} == {v}' for (k,v) in self.__dict__.items()])
         return msg
     
-    def map_buff_to_quality(self, clt_msg: ClientMessage):
+    def _map_buff_to_quality(self, clt_msg: ClientMessage):
+        # map the current buffer percentage to the possible bitrates
         bitrates = clt_msg.quality_bitrates
         R_min = min(bitrates)
         R_max = max(bitrates)
         buff_scaled = self.buffer_capacity / clt_msg.buffer_max_size # scale buffer occupancy to [0,1]
         buff_scaled = buff_scaled * (R_max - R_min) + R_min          # scale buffer buffer occupancy to [min(bitrates), max(bitrates)]
-        
+
+        # Approach to mapping in in the BBA-0 algorithm from paper
         try:    R_minus = max([r for r in bitrates if r < self.R_prev])
         except: R_minus = self.R_prev
         try:    R_plus  = min([r for r in bitrates if r > self.R_prev])
         except: R_plus  = self.R_prev
-        # print_dbg(f'{buff_scaled} -> [{R_minus}, {R_plus}]')
-
         if   buff_scaled <= R_minus:
             try:    R_next = max(filter(lambda x: x > buff_scaled, bitrates))
             except: R_next = self.R_prev
@@ -107,6 +107,7 @@ class BBA_2():
             R_next = self.R_prev
         
         # look up the quality choice from the array
+        # Little biased on choosing the rate that is under not closest
         qual_next = 0
         for r in sorted(bitrates):
             if r <= R_next:
@@ -125,7 +126,7 @@ class BBA_2():
         else:                  self.reservoir = (self.alpha * self.reservoir) + (1-self.alpha) * drain_time
 
         if self.do_quickstart:
-            qual_estimate = self.map_buff_to_quality(clt_msg)
+            qual_estimate = self._map_buff_to_quality(clt_msg)
             if (1 - clt_msg.quality_bitrates[qual_estimate]/throughput) > 0.875:
                 qual_choice = min(qual_estimate + 1, clt_msg.quality_levels - 1)
             else:
@@ -147,7 +148,7 @@ class BBA_2():
             else:
                 # Select a chunk size as a function of the current buffer capacaty
                 self.counts[2] += 1
-                qual_choice = self.map_buff_to_quality(clt_msg)
+                qual_choice = self._map_buff_to_quality(clt_msg)
         
         self.qual_prev = qual_choice
         self.R_prev    = clt_msg.quality_bitrates[qual_choice]
