@@ -75,7 +75,6 @@ class Robust_MPC():
     def __init__(self):
         self.reservoir = None
         self.qual_prev = 0
-        self.R_prev    = 0
         self.alpha     = 0.5 # exponential smoothing factor for reservoir
         self.buffer_capacity_prev = 0
         self.do_quickstart = True
@@ -104,6 +103,7 @@ class Robust_MPC():
             avg += 1 / tp
         return len(self.throughput_hist) / avg
 
+    # transform bitrate options to times based on the estimated throughput
     def get_time_from_bitrates(self, bitrates_curr, bitrates_next, throughput):
         times = [bitrates_curr,]
         for i in range(self.lookahead_window - 1):
@@ -112,27 +112,33 @@ class Robust_MPC():
         return times
 
     def calc_MPC(self, throughput, clt_msg:ClientMessage):
+        # caclulates differences in an array of qualitites
+        # used for varience metric
         def calc_diffs(quals):
             for i in range(len(quals)):
-                if i == 0:
-                    yield abs(self.qual_prev - quals[i])
-                else:
-                    yield abs(quals[i] - quals[i-1])
+                if i == 0: yield abs(self.qual_prev - quals[i])
+                else:      yield abs(quals[i] - quals[i-1])
 
         qual_max   = 0
-        qoe_max    = -1000
+        qoe_max    = -1000 # arbitrary large negitive (REALLY bad if QOE is this low)
         times      = self.get_time_from_bitrates(clt_msg.quality_bitrates, clt_msg.upcoming_quality_bitrates, throughput)
-        qual_paths = list(product( *[list(range(len(t))) for t in times] ))
+        qual_paths = list(product( *[list(range(len(t))) for t in times] )) # all possible paths within given lookahead
         for path in qual_paths:
+            # calculate metrics that factor into QOE
             quality     = sum(path)
             rebuff_time = max(0, sum([times[i][j] for (i, j) in enumerate(path)]) - self.buffer_capacity)
             variation   = sum(calc_diffs(path))
+
+            # calculate the QOE of the given path based on config metrics
             qoe_temp    = clt_msg.quality_coefficient     * quality
             qoe_temp   -= clt_msg.rebuffering_coefficient * rebuff_time
             qoe_temp   -= clt_msg.variation_coefficient   * variation
+            
+            # select bitrate that yields the hightst QOE
             if qoe_temp > qoe_max:
                 qoe_max  = qoe_temp
                 qual_max = path[0]
+        
         return qual_max
 
     def get_quality(self, clt_msg: ClientMessage):
@@ -145,9 +151,8 @@ class Robust_MPC():
             throughput = 1.5
         # calculate bitrate (R) and (startup delay (T_s) in init phase)
         qual_choice = self.calc_MPC(throughput, clt_msg)
-
+        
         self.qual_prev = qual_choice
-        self.R_prev    = clt_msg.quality_bitrates[qual_choice]
   
         print_dbg('\n  '.join([f'{k} == {v}' for (k,v) in clt_msg.__dict__.items()]))
         print_dbg(f'video left {clt_msg.buffer_seconds_until_empty} s')
