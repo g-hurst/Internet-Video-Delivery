@@ -76,6 +76,7 @@ class BBA_2():
         self.buffer_capacity_prev = 0
         self.do_quickstart = True
 
+        self.plot_num = 1
         self.quals = []
         self.counts = [0,0,0]
 
@@ -167,13 +168,14 @@ class BBA_2():
         self.quals.append(qual_choice)
         if len(clt_msg.upcoming_quality_bitrates) == 0:
             from matplotlib import pyplot as plt 
+            
             plt.subplot(1,2,1)
             plt.plot(self.quals)
             plt.title('quality over time')
             plt.xlabel('chunk number')
             plt.ylabel('bitrate')
 
-            plt.subplot(1,2,2)
+            plt.subplot(1,2, 2)
             plt.hist(self.quals)
             plt.title('quality distribution')
             plt.xlabel('chunk bitrate')
@@ -181,6 +183,7 @@ class BBA_2():
 
             plt.tight_layout()
             plt.savefig('BBA_2_qualitites.png')
+            plt.clf()
 
         return qual_choice
 
