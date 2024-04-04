@@ -1,0 +1,3 @@
+# run with $ zip submission.zip -j -@  < zip.lst
+./student/student1.py
+./student/student2.py
